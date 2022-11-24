@@ -42,11 +42,11 @@ android {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation "com.tomtom.sdk:maps-display:0.3.303"
-    implementation "com.tomtom.sdk:location-android:0.3.303"
+    implementation "com.tomtom.sdk.maps:map-display:0.3.1056"
     implementation "com.github.utahemre:JavaSuperCluster:master-SNAPSHOT"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

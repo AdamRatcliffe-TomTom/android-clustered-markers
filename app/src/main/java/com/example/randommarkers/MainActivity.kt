@@ -1,18 +1,18 @@
 package com.example.randommarkers
 
+import android.graphics.PointF
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.tomtom.sdk.common.location.GeoBoundingBox
-import com.tomtom.sdk.common.location.GeoCoordinate
-import com.tomtom.sdk.maps.display.MapOptions
-import com.tomtom.sdk.maps.display.camera.CameraOptions
-import com.tomtom.sdk.maps.display.common.Color
-import com.tomtom.sdk.maps.display.common.screen.Padding
-import com.tomtom.sdk.maps.display.common.screen.PointF
-import com.tomtom.sdk.maps.display.image.ImageFactory
-import com.tomtom.sdk.maps.display.marker.Label
-import com.tomtom.sdk.maps.display.marker.MarkerOptions
-import com.tomtom.sdk.maps.display.ui.MapFragment
+import com.tomtom.sdk.common.location.GeoPoint
+import com.tomtom.sdk.map.display.MapOptions
+import com.tomtom.sdk.map.display.camera.CameraOptions
+import com.tomtom.sdk.map.display.common.Color
+import com.tomtom.sdk.map.display.common.screen.Padding
+import com.tomtom.sdk.map.display.image.ImageFactory
+import com.tomtom.sdk.map.display.marker.Label
+import com.tomtom.sdk.map.display.marker.MarkerOptions
+import com.tomtom.sdk.map.display.ui.MapFragment
 import com.yeo.javasupercluster.SuperCluster
 import org.wololo.geojson.Feature
 import org.wololo.geojson.Point
@@ -21,10 +21,10 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var tomTomMap: com.tomtom.sdk.maps.display.TomTomMap
+    private lateinit var tomTomMap: com.tomtom.sdk.map.display.TomTomMap
     private lateinit var cluster: SuperCluster
     private val bounds: GeoBoundingBox =
-        GeoBoundingBox(GeoCoordinate(38.2033, -122.6445), GeoCoordinate(37.1897, -121.5871))
+        GeoBoundingBox(GeoPoint(38.2033, -122.6445), GeoPoint(37.1897, -121.5871))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         )
         val clusterCoords = clusters.map { cluster: Feature ->
             val (lng, lat) = (cluster.geometry as Point).coordinates
-            GeoCoordinate(lat, lng)
+            GeoPoint(lat, lng)
         }
 
         // Remove any markers for which we don't have a cluster at the marker location
@@ -123,10 +123,10 @@ class MainActivity : AppCompatActivity() {
         val (lng, lat) = (feature.geometry as Point).coordinates
         val pointCount = feature.properties["point_count"]
         val isCluster = pointCount != null
-        val coordinate = GeoCoordinate(lat, lng)
+        val point = GeoPoint(lat, lng)
         val markerOptions = when {
             isCluster -> MarkerOptions(
-                coordinate = coordinate,
+                coordinate = point,
                 pinImage = ImageFactory.fromResource(R.drawable.ic_ellipse),
                 label = Label(
                     text = formatNumber(pointCount as Int),
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                 tag = pointCount
             )
             else -> MarkerOptions(
-                coordinate = coordinate,
+                coordinate = point,
                 pinImage = ImageFactory.fromResource(R.drawable.ic_marker_pin),
             )
         }
@@ -144,12 +144,12 @@ class MainActivity : AppCompatActivity() {
         tomTomMap.addMarker(markerOptions)
     }
 
-    private fun getBoundingBoxCenter(bounds: GeoBoundingBox): GeoCoordinate {
+    private fun getBoundingBoxCenter(bounds: GeoBoundingBox): GeoPoint {
         val lat =
             bounds.bottomRight.latitude + (bounds.topLeft.latitude - bounds.bottomRight.latitude) / 2
         val lng =
             bounds.topLeft.longitude + (bounds.bottomRight.longitude - bounds.topLeft.longitude) / 2
-        return GeoCoordinate(lat, lng)
+        return GeoPoint(lat, lng)
     }
 
     private fun boundsToBBox(bounds: GeoBoundingBox): DoubleArray {
